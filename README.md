@@ -17,5 +17,6 @@ Usage
 -----
 
 ```bash
+source bin/activate
 python ftdu.py /some/path
 ```
