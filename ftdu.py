@@ -54,9 +54,11 @@ def status():
 
 spawn_interval(status)
 
+# Walk all files in all subdirectories of the path
 for root, dirs, files in os.walk(path):
     for filename in files:
         filepath = os.path.join(root, filename)
+        # We ignore symlinks because getsize returns the target file size
         if not os.path.islink(filepath):
             current_file = filepath
             filetype = magic.from_file(filepath).split(',')[0]
