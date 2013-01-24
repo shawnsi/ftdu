@@ -45,7 +45,11 @@ def status():
     top25 = total_tuples[:25]
     print 'Top %d file types by size:' % len(top25)
     for (filetype, size) in top25:
-        percent = size / float(total_bytes)
+        try:
+            percent = size / float(total_bytes)
+        except ZeroDivisionError:
+            percent = 0
+
         print '%s: %.2f%%' % (filetype, percent * 100)
 
 spawn_interval(status)
