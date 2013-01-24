@@ -11,6 +11,29 @@ current_file = ''
 total_bytes = 0
 totals = {}
 
+def spawn_interval(f, interval=1, *args, **kwargs):
+    '''
+    Spawns a new greenlet on a given interval until the main loop exits.
+
+    Args:
+
+        f - the function to wrap in greenlets
+
+    Keyword Args:
+
+        interval - number of seconds to wait between running each greenlet
+
+    Example:
+
+        def run_me():
+            return True
+
+        # Run the function every 5 seconds
+        spawn_interval(run_me, interval=5)
+    '''
+    gevent.spawn(f, *args, **kwargs)
+    gevent.spawn_later(interval, spawn_interval, f, interval, *args, **kwargs)
+
 def status():
     os.system('clear')
     if current_file:
@@ -24,9 +47,8 @@ def status():
     for (filetype, size) in top25:
         percent = size / float(total_bytes)
         print '%s: %.2f%%' % (filetype, percent * 100)
-    gevent.spawn_later(1, status)
 
-status()
+spawn_interval(status)
 
 for root, dirs, files in os.walk(path):
     for filename in files:
