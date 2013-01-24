@@ -7,6 +7,7 @@ import magic
 from hurry.filesize import size as human_size
 
 path = sys.argv[1]
+count = 0
 current_file = ''
 total_bytes = 0
 totals = {}
@@ -38,6 +39,7 @@ def status():
     os.system('clear')
     if current_file:
         print 'Current file: %s' % current_file
+        print 'Files processed: %d' % count
         print 'Total data: %s' % human_size(total_bytes)
         print
 
@@ -66,6 +68,7 @@ for root, dirs, files in os.walk(path):
             total = totals.setdefault(filetype, 0)
             totals[filetype] = total + filesize
             total_bytes += filesize
+            count += 1
         gevent.sleep()
 
 status()
