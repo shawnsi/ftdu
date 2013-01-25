@@ -4,6 +4,8 @@ import virtualenv, textwrap
 output = virtualenv.create_bootstrap_script(textwrap.dedent("""
 def after_install(options, home_dir):
     subprocess.call([join(home_dir, 'bin', 'pip'),
+                    'install', 'docopt'])
+    subprocess.call([join(home_dir, 'bin', 'pip'),
                     'install', 'gevent'])
     subprocess.call([join(home_dir, 'bin', 'pip'),
                     'install', 'python-magic'])

@@ -1,12 +1,23 @@
 #!/usr/bin/env python
+'''File Type Disk Usage.
 
+Usage:
+    ftdu.py [-v] <path>
+
+Options:
+    -v --verbose    Show verbose libmagic types.
+
+'''
+
+from docopt import docopt
 import gevent
 import os
 import sys
 import magic
 from hurry.filesize import size as human_size
 
-path = sys.argv[1]
+args = docopt(__doc__, version='File Type Disk Usage 1.0')
+
 count = 0
 current_file = ''
 total_bytes = 0
@@ -57,13 +68,15 @@ def status():
 spawn_interval(status)
 
 # Walk all files in all subdirectories of the path
-for root, dirs, files in os.walk(path):
+for root, dirs, files in os.walk(args['<path>']):
     for filename in files:
         filepath = os.path.join(root, filename)
         # We ignore symlinks because getsize returns the target file size
         if not os.path.islink(filepath):
             current_file = filepath
-            filetype = magic.from_file(filepath).split(',')[0]
+            filetype = magic.from_file(filepath)
+            if not args['--verbose']:
+                filetype = filetype.split(',')[0]
             filesize = os.path.getsize(filepath)
             total = totals.setdefault(filetype, 0)
             totals[filetype] = total + filesize
